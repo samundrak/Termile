@@ -1,0 +1,1 @@
+$clientCommands = ['login','register','info'];
