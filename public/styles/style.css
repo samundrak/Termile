@@ -4,4 +4,7 @@ body {
 	overflow-x: hidden;
 	font-family: Monospace;
 }
+.terminal, .cmd {
+  height: auto;
+}
  

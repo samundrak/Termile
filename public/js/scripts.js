@@ -11,8 +11,6 @@ function optionsMakers(res) {
     }
 }
 $global = function(name, value) {
-    console.log(name)
-    console.log(value)
     Meteor.call('props', {
         name: name,
         value: value
@@ -25,7 +23,7 @@ jQuery(function($, undefined) {
         cmd, {
             greetings: 'Termile Your Terminal Profile :)',
             name: 'js_demo',
-            height: 200,
+            height: 'auto',
             prompt: 'Home:~$ '
         });
 });

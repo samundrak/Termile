@@ -1,5 +1,7 @@
 cmd = function(command, term) {
-    // term.pause();
+    $("html, body").animate({
+        scrollTop: $(document).height()
+    }, 1500);
 
     if (command !== '') {
         try {
@@ -14,10 +16,11 @@ cmd = function(command, term) {
                     switch (result.status) {
                         case 4:
                             $global('prompt', result.data.prompt);
+                            term.echo(result.message);
                             term.set_prompt(result.data.name + ":~$ ");
                             break;
                         case 3:
-                             $$clientOperations[result.data.methods.name](result,term);
+                            $$clientOperations[result.data.methods.name](result, term);
                             break;
                         case 1:
                             if (result.data.prompt) {
@@ -40,6 +43,10 @@ cmd = function(command, term) {
                                 var ids = [];
                                 keys.forEach(function(item, index) {
                                     term.push(function(cmd, trm) {
+                                        $("html, body").animate({
+                                            scrollTop: $(document).height()
+                                        }, 1500);
+
                                         if (result.data.fields[item].require) {
                                             if (result.data.fields[item].options) {
                                                 result.data.fields[item].options.forEach(function(o) {
@@ -89,8 +96,8 @@ cmd = function(command, term) {
                                                 for (var i = 0; i < ids.length; i++) {
                                                     string = string + ' ' + ids[i] + ' ' + values[i];
                                                 };
-                                                  $$clientOperations[result.data.methods.name](result,term);
-                                               
+                                                $$clientOperations[result.data.methods.name](result, term);
+
                                             }
                                         }
                                     });
@@ -108,4 +115,3 @@ cmd = function(command, term) {
         term.echo('');
     }
 }
-
