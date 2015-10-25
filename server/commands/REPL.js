@@ -83,8 +83,13 @@ $repl = {
             delete data.sex;
             delete data.dob;
             // console.log(Me)
-            
-            return 'ayo ayo';
+
+            return $res(3, "Continue to next client methods", {
+                methods: {
+                    name: 'register',
+                },
+                data: data
+            });
         } else {
             return $commands.register.help;
         }

@@ -5,12 +5,19 @@ cmd = function(command, term) {
         try {
             var result = command;
             if (result !== undefined) {
+
                 Meteor.call('REPL', result, function(error, result) {
 
                     if (error) return term.error(error);
                     if (!result.status) return term.error(result.message);
 
                     switch (result.status) {
+                        case 3:
+                        var cc = $$clientOperations[result.data.methods.name](result);
+                        console.log(cc);
+                        if(!cc.status) return term.error(cc.message);
+                        return term.echo(result.message);
+                        break;
                         case 1:
                             term.echo(result.message);
                             break;
