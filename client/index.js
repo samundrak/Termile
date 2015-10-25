@@ -1,26 +1,39 @@
 $$clientOperations = {
 
-    login: function(command) {
-        return command;
+    login: function(result, term) {
+        var username = undefined
+        var password = undefined;
+        if (!result.data.methods.hasOwnProperty('options')) {
+            Meteor.loginWithPassword(result.data.data.username, result.data.data.password, function(err) {
+                if (err) return term.error(err.reason);
+
+                term.set_prompt(result.data.data.username + ":~$ ");
+                return term.echo('Welcome ' + result.data.data.username);
+            });
+        } else {
+            return term.error('Sorry :(');
+        }
     },
-    register: function(result) {
+    register: function(result, term) {
         if (result.data.methods.hasOwnProperty('options')) {
 
         } else {
-            console.log('db')
-            // Accounts.createUser(result.data.data, function(error) {
-            //     // if(error) return {status :0, message : error.reason};
-            //     console.log('oeeeee')
-            // });
-            Meteor.wrapAsync(Accounts.createUser(result.data.data, function(error) {
-                // if(error) return {status :0, message : error.reason};
-                console.log('oeeeee')
-            });)
-            console.log('ssss')
-            return {
-                status: 0,
-                message: 'oe'
+            Accounts.createUser(result.data.data, function(err) {
+                    if (err) return term.error(err.reason);
+
+                    Meteor.logout(function(err) {
+                            if (err) return term.error(err.reason);
+
+                            Meteor.loginWithPassword(result.data.data.username, result.data.data.password, function(err) {
+                                    if (err) return term.error(err.reason);
+
+                                    term.set_prompt(result.data.data.username + ":~$ ");
+                                    return term.echo('Welcome ' + result.data.data.username);
+                                
+
+                            })
+                    });
+                });
             }
         }
     }
-}

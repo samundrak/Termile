@@ -8,9 +8,15 @@ $repl = {
                 var password = $getOptionsValue(command, "-p", options) || undefined;
                 console.log(username + "" + password);
                 if (username && password) {
-                    console.log(username);
-                    console.log(password);
-                    return 'done';
+                    return $res(3, "Continue to next client methods", {
+                        methods: {
+                            name: 'login',
+                        },
+                        data: {
+                            username: username,
+                            password: password
+                        }
+                    });
                 } else {
                     return $res(0, "invalid data format! " + $commands.login.help);
                 }
@@ -32,7 +38,11 @@ $repl = {
             }
             return $res(2, 'More information required', {
                 type: type,
-                name: 'register',
+                name :  'register',
+                methods: {
+                    name: 'register',
+                    command: 'save' 
+                },
                 fields: {
                     username: {
                         require: true,
@@ -87,12 +97,23 @@ $repl = {
             return $res(3, "Continue to next client methods", {
                 methods: {
                     name: 'register',
+                    command: 'save',
+                    // options: options
                 },
                 data: data
             });
         } else {
             return $commands.register.help;
         }
+    },
+    cd :  function(command){
+        console.log(Meteor.user());
+        var usr = Meteor.users.findOne({username:command[1]});
+        if(usr)
+        return  $res(4,'Change commands name',{name:command[1]});
+        else
+        return  $res(4,'Dont commands name',{name:'Home'});
+
     }
 }
-$name = "sams"
+$prompt = "home";

@@ -10,5 +10,9 @@ $commands = {
 	},
 	info : {
 		help : "Termile is a Terminal Profile, A linux based terminal where you can get information about developers and programmers like any terminal based"
+	},
+	cd : {
+		help : "enter cd <username> to go to some user's profile",
+		eval : $repl.cd
 	}
 }

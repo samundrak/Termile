@@ -29,5 +29,10 @@ Meteor.methods({
         } else {
             return $res(0, "Invalid command");
         }
+    },
+    props : function(options){
+         $prompt = options.value;
+         Meteor[options.name] =  options.value;
+         console.log(Meteor[options.name])
     }
 });

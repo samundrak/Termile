@@ -12,13 +12,19 @@ cmd = function(command, term) {
                     if (!result.status) return term.error(result.message);
 
                     switch (result.status) {
+                        case 4:
+                            $global('prompt', result.data.prompt);
+                            term.set_prompt(result.data.name + ":~$ ");
+                            break;
                         case 3:
-                        var cc = $$clientOperations[result.data.methods.name](result);
-                        console.log(cc);
-                        if(!cc.status) return term.error(cc.message);
-                        return term.echo(result.message);
-                        break;
+                             $$clientOperations[result.data.methods.name](result,term);
+                            break;
                         case 1:
+                            if (result.data.prompt) {
+                                Session.set('prompt', result.data.prompt);
+
+                                term.set_prompt(result.data.prompt + ":~$ ");
+                            }
                             term.echo(result.message);
                             break;
                         case 2:
@@ -68,7 +74,7 @@ cmd = function(command, term) {
                                                 });
                                             } else {
                                                 values.push(cmd);
-                                                        ids.push(result.data.fields[item].id);
+                                                ids.push(result.data.fields[item].id);
 
                                                 trm.pop();
                                             }
@@ -79,8 +85,12 @@ cmd = function(command, term) {
                                         name: result.data.name,
                                         onExit: function(ki) {
                                             if (item === keys[0]) {
-                                                console.log(ids);
-                                                console.log(values);
+                                                var string = result.data.methods.name + ' ' + result.data.methods.command;
+                                                for (var i = 0; i < ids.length; i++) {
+                                                    string = string + ' ' + ids[i] + ' ' + values[i];
+                                                };
+                                                  $$clientOperations[result.data.methods.name](result,term);
+                                               
                                             }
                                         }
                                     });
@@ -99,15 +109,3 @@ cmd = function(command, term) {
     }
 }
 
-function optionsMakers(res) {
-    if (res) {
-        var q = " Enter ";
-        res.forEach(function(item) {
-            q = q + " " + item.toUpperCase() ;
-            if (res[res.length - 1] != item) {
-                q = q + " or "
-            }
-        });
-        return q;
-    }
-}
