@@ -24,6 +24,6 @@ jQuery(function($, undefined) {
             greetings: 'Termile Your Terminal Profile :)',
             name: 'js_demo',
             height: 'auto',
-            prompt: 'Home:~$ '
+            prompt: Meteor.user() ?  Meteor.user().username  + ':~$ ': 'Home:~$ '
         });
 });

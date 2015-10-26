@@ -176,14 +176,58 @@ $repl = {
         }
     },
     set: function(command) {
+        var user = Meteor.user();
+        if (!user) return $res(0, "You are not logged in");
+
         if (command[1] === 'profile') {
             if (command.length === 4) {
-
+                // Meteor.user
+                data = user.profile;
+                data[command[2]] = command[3];
+                Meteor.users.update(Meteor.userId(), {
+                    $set: {
+                        profile: data
+                    }
+                });
+                return $res(1, "Updated successfully");
             } else {
                 return $res(1, $commands.set.help);
             }
         } else if (command[1] === 'account') {
+            if (command.length === 4) {
+                switch (command[2]) {
+                    case 'username':
+                        try {
+                            if (Meteor.users.update(Meteor.userId(), {
+                                $set: {
+                                    username: command[3]
+                                }
+                            })) {
+                                return $res(4, "New username updated", {
+                                    name: command[3]
+                                });
+                            } else {
+                                return $res(0, "Unable to update username");
 
+                            }
+                        } catch (err) {
+                            return $res(0, "Unable to update username");
+                        }
+                        break;
+
+                    case 'password':
+                        return $res(1, 'Currently changing password service is not Available');
+                        break;
+                    case 'email':
+                        return $res(1, 'Currently changing email service is not Available');
+                        break;
+                    default:
+                        return $res(1, $commands.set.help);
+                        break;
+                }
+            } else {
+                return $res(1, $commands.set.help);
+            }
         } else {
             return $res(1, $commands.set.help);
 
