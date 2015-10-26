@@ -22,5 +22,9 @@ $commands = {
     my: {
         help: "Enter 'my info' to get all info about me . More options are [ name,address,email,sex,country,dob]",
         eval: $repl.my
+    },
+    set : {
+    	help :  "Enter 'set <keys> <value> ' to edit or add your profile values",
+    	eval : $repl.set
     }
 }

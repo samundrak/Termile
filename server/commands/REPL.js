@@ -49,7 +49,7 @@ $repl = {
                         length: 3,
                         id: "-u"
                     },
-                    passowrd: {
+                    password: {
                         require: true,
                         length: 3,
                         id: "-p"
@@ -87,7 +87,9 @@ $repl = {
             data.profile = {
                 country: data.country,
                 sex: data.sex,
-                dob: data.dob
+                dob: data.dob,
+                username: data.username,
+                email: data.email
             }
             delete data.country;
             delete data.sex;
@@ -144,13 +146,10 @@ $repl = {
         if (command[1] === 'info') {
             if (Meteor.user()) {
                 var user = Meteor.user();
-                var res = "You are logged in as " + Meteor.user().username;
-                res += "\n Username: " + user.username;
-                res += "\n Email: " + user.emails[0].address + ' verified: ' + user.emails[0].verified + '';
-                res += "\n Sex: " + user.profile.sex;
-                res += "\n Country: " + user.profile.country;
-                res += "\n Date of birth: " + user.profile.dob;
-                res += "\n Registered on: " + user.createdAt;
+                var res = '';
+                for (var key in user.profile) {
+                    res = res + key + ': ' + user.profile[key] + '\n';
+                }
                 return res;
             } else {
                 return $res(0, 'You are not logged in currently');
@@ -163,35 +162,33 @@ $repl = {
         } else {
             var user = Meteor.user();
             if (!user) return $res(0, 'You are not logged in user');
-            var cmds = ['username', 'profile', 'email', 'sex', 'dob', 'country'];
-            if (_.contains(cmds, command[1])) {
-                var res = $commands.my.help;
-                switch (command[1]) {
-                    case 'username':
-                        res = user.username;
-                        break;
-                    case 'profile':
-                        res = JSON.stringify(user.profile);
-                        break;
-                    case 'email':
-                        res = user.emails[0].address;
-                        break;
-                    case 'sex':
-                        res = user.profile.sex;
-                        break;
-                    case 'dob':
-                        res = user.profile.dob;
-                        break;
-                    case 'country':
-                        res = user.profile.country;
-                        break;
-                }
+            var res = $commands.my.help;
+            if (user.profile.hasOwnProperty(command[1])) {
+                res = user.profile[command[1]].toString();
                 return $res(1, res);
-            } else {
-                return $res(1, $commands.my.help);
             }
+
+            var keys = [];
+            for (var key in user.profile) {
+                keys.push(key);
+            }
+            return $res(1, "Available commands " + keys.toString());
         }
     },
+    set: function(command) {
+        if (command[1] === 'profile') {
+            if (command.length === 4) {
+
+            } else {
+                return $res(1, $commands.set.help);
+            }
+        } else if (command[1] === 'account') {
+
+        } else {
+            return $res(1, $commands.set.help);
+
+        }
+    }
 
 }
 $prompt = "home";

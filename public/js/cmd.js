@@ -96,7 +96,11 @@ cmd = function(command, term) {
                                                 for (var i = 0; i < ids.length; i++) {
                                                     string = string + ' ' + ids[i] + ' ' + values[i];
                                                 };
-                                                $$clientOperations[result.data.methods.name](result, term);
+                                                Meteor.call('REPL', string, function(err, res) {
+                                                    if (err) return term.error(err.reason || err);
+                                                    return $$clientOperations[res.data.methods.name](res, term);
+                                                });
+
 
                                             }
                                         }

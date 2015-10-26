@@ -6,5 +6,6 @@ body {
 }
 .terminal, .cmd {
   height: auto;
+  font-size: 15px;
 }
  
